@@ -28,12 +28,15 @@ namespace aspnetcore_azure_blobStorage.Services
     {
       var name = _blobStorageOptions.ContainerName;
       // Abaixo verifica se existe um container com o nome configurado
-      var containerExist = await _blobServiceClient.GetBlobContainerClient(name).ExistsAsync();
+      var containerExist = await _blobServiceClient
+        .GetBlobContainerClient(name)
+        .ExistsAsync();
 
       if (containerExist)
       {
         // Se existe, então é deletado
-        var deletedContainer = await _blobServiceClient.DeleteBlobContainerAsync(name);
+        var deletedContainer = await _blobServiceClient
+          .DeleteBlobContainerAsync(name);
         return deletedContainer.Status == 202 ? true : false;
       }
 
@@ -70,7 +73,8 @@ namespace aspnetcore_azure_blobStorage.Services
       {
         var insertedBlob = await blobClient
           .UploadBlobAsync($"{Guid.NewGuid().ToString()}{file.FileName}", file.OpenReadStream());
-        blobsInserted = insertedBlob.GetRawResponse().Status == 201 ? true : false;
+        blobsInserted = insertedBlob
+          .GetRawResponse().Status == 201 ? true : false;
       }
 
       return blobsInserted.Value;
@@ -80,7 +84,8 @@ namespace aspnetcore_azure_blobStorage.Services
     {
       string containerName = _blobStorageOptions.ContainerName;
 
-      var container = _blobServiceClient.GetBlobContainerClient(containerName);
+      var container = _blobServiceClient
+        .GetBlobContainerClient(containerName);
 
       if (!container.Exists())
         return await _blobServiceClient
